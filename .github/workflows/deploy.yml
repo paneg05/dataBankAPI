@@ -1,0 +1,36 @@
+name:  Deploy to Production
+
+on:
+  push:
+    branches:
+     -main
+
+jobs:
+  deploy:
+    runs-on: unbuntu-latest
+    
+    steps:
+      -name: Checkout code
+       uses: actions/checkout@v2
+    
+      -name: Set up Node.js
+       uses: actions/setupnode@v2
+         with:
+           node-version:"14"
+
+      -name: install dependencies
+      run: upm install
+
+      -name: run build
+      run: npm run build
+
+      -name: Deploy to production server
+       env:
+         DEPLOY_KEY: secrets.deploy_KEY
+       run:
+         ssh -iDEPLOY_KEY
+          user@productionserver "cd/path/to/your/app" && git pull main && npm install && npm run start
+    
+    
+    
+     
